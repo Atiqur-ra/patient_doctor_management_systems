@@ -40,3 +40,11 @@ def get_past_appointments(db: Session, user_id: int, role: str):
         return db.query(Appointment).filter(Appointment.doctor_id == user_id, Appointment.appointment_time <= now).all()
     else:
         return db.query(Appointment).filter(Appointment.patient_id == user_id, Appointment.appointment_time <= now).all()
+
+from sqlalchemy.orm import Session
+from app.models.doctor_availability import DoctorAvailability
+
+def get_doctor_availability(db: Session, doctor_id: int):
+    # Fetch all available dates for a given doctor
+    available_dates = db.query(DoctorAvailability).filter(DoctorAvailability.doctor_id == doctor_id).all()
+    return available_dates

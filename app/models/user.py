@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from enum import Enum as PyEnum
@@ -40,3 +40,5 @@ class User(Base):
     )
     
     documents = relationship("Document", back_populates="owner")
+    availability = relationship("DoctorAvailability", back_populates="doctor")
+
