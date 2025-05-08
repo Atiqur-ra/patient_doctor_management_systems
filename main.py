@@ -12,9 +12,8 @@ app = FastAPI(
     docs_url="/docs" )
 
 Base.metadata.create_all(bind=engine)
-
-app.include_router(routes_auth.router)
 app.include_router(routes_user.router)
+app.include_router(routes_auth.router)
 app.include_router(routes_appointment.router)
 app.include_router(routes_document.router)
 app.include_router(routes_review.router)
