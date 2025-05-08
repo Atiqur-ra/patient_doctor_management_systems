@@ -3,7 +3,7 @@ from jose import JWTError, jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-
+from app.database import get_db
 from app.config import settings
 from app.crud.user import get_user_by_email, verify_password
 from app.database import SessionLocal
@@ -21,15 +21,17 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return encoded_jwt
 
 # Authenticate user
-def authenticate_user(email: str, password: str):
-    db = SessionLocal()
+def authenticate_user(db: Session, email: str, password: str):
     user = get_user_by_email(db, email)
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
 
 # Dependency to get current user from JWT
-def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid token",
@@ -43,7 +45,6 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     except JWTError:
         raise credentials_exception
 
-    db = SessionLocal()
     user = get_user_by_email(db, email)
     if user is None:
         raise credentials_exception

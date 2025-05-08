@@ -9,8 +9,7 @@ app = FastAPI(
     title="Patient-Doctor Management System",
     description="Manage patients, doctors, appointments, and more.",
     version="1.0",
-    docs_url="/docs"  # Default URL for Swagger docs, can be changed here
-)
+    docs_url="/docs" )
 
 Base.metadata.create_all(bind=engine)
 
